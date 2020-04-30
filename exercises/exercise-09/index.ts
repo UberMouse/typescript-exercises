@@ -34,14 +34,14 @@ Run:
 
 */
 
-interface User {
+type User = {
     type: 'user';
     name: string;
     age: number;
     occupation: string;
 }
 
-interface Admin {
+type Admin = {
     type: 'admin';
     name: string;
     age: number;
@@ -71,8 +71,18 @@ type ApiResponse<T> = (
     }
 );
 
-function promisify(arg: unknown): unknown {
-    return null;
+// I'm pretty sure there is a way to do this without conditional types...
+type UnpackApiResponse<T> = T extends ApiResponse<infer TData> ? TData : never;
+function promisify<T extends ApiResponse<unknown>, TData = UnpackApiResponse<T>>(api: (callback: (response: ApiResponse<TData>) => void) => void): () => Promise<TData> {
+    return () => new Promise<TData>((resolve, reject) => {
+      api(response => {
+        if (response.status === "success") {
+            resolve(response.data);
+        } else {
+            reject(response.error);
+        }
+      });
+    });
 }
 
 const oldApi = {

@@ -25,14 +25,14 @@ Run:
 
 */
 
-interface User {
+type User = {
     type: 'user';
     name: string;
     age: number;
     occupation: string;
 }
 
-interface Admin {
+type Admin = {
     type: 'admin';
     name: string;
     age: number;
@@ -48,11 +48,11 @@ const persons: Person[] = [
     { type: 'admin', name: 'Bruce Willis', age: 64, role: 'World saver' }
 ];
 
-function isAdmin(person: Person) {
+function isAdmin(person: Person): person is Admin {
     return person.type === 'admin';
 }
 
-function isUser(person: Person) {
+function isUser(person: Person): person is User {
     return person.type === 'user';
 }
 

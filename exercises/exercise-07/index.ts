@@ -27,21 +27,21 @@ Run:
 
 */
 
-interface User {
+type User = {
     type: 'user';
     name: string;
     age: number;
     occupation: string;
 }
 
-interface Admin {
+type Admin = {
     type: 'admin';
     name: string;
     age: number;
     role: string;
 }
 
-type PowerUser = unknown;
+type PowerUser = Omit<User & Admin, "type"> & {type: "powerUser"};
 
 type Person = User | Admin | PowerUser;
 
