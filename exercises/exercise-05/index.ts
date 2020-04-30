@@ -64,11 +64,18 @@ function logPerson(person: Person) {
     );
 }
 
-function filterPersons(persons: Person[], personType: string, criteria: unknown): unknown[] {
+function getObjectKeys<T, TKey extends keyof T>(o: T): TKey[] {
+    return Object.keys(o) as TKey[];
+}
+
+type Criteria = Partial<Omit<Person, "type">>;
+function filterPersons(persons: Person[], personType: "user", criteria: Criteria): User[];
+function filterPersons(persons: Person[], peronType: "admin", criteria: Criteria): Admin[];
+function filterPersons(persons: Person[], personType: string, criteria: Criteria): Person[] {
     return persons
         .filter((person) => person.type === personType)
         .filter((person) => {
-            let criteriaKeys = Object.keys(criteria) as (keyof Person)[];
+            let criteriaKeys = getObjectKeys(criteria);
             return criteriaKeys.every((fieldName) => {
                 return person[fieldName] === criteria[fieldName];
             });
